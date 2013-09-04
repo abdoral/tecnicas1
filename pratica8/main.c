@@ -38,10 +38,11 @@ float mediaAritimetica(float *numeros) {
 
     register int contador = 0;
     float media = 0.0;
-
-    while(*numeros) {
+    while(*numeros == numeros[contador]) {
+        printf("conteude de %f \n", *numeros);
         media += *(numeros++);
         contador++;
+        printf("conteude de %d \n", contador);
     }
     return media/contador;
 }
@@ -80,10 +81,10 @@ float mediaPonderada(float *numeros, int *pesos) {
 
 int main()
 {
-    float raio[] = {2,10,2,4,54,878.668,841,85};
-    int pesos[] = {1,1,10,1,1,1,1,1,1,1,1,1};
+    float numeros[] = {2,10};
+    int pesos[] = {1,1};
     printf("Média \n");
-    printf("%f", mediaPonderada(raio, pesos));
+    printf("%f\n", mediaAritimetica(numeros));
     return 0;
 }
 
