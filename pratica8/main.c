@@ -12,8 +12,11 @@
 
 
 #define PI 3.14
+#define QTD_NOTAS 3
 
 typedef enum {FALSE, TRUE} boolean;
+
+typedef struct {float raiz1, float raiz2} raizes_equacao_2_grau;
 
 
 /*
@@ -32,19 +35,17 @@ double volumeEsfera (float raio) {
   Calcula a média aritimética de uma lista de números dados;
 
   @param float *numeros endereço do vetor de números
+  @param int qtd_numeros total de números a serem calculados
   @return float média aritimética calculada
 */
-float mediaAritimetica(float *numeros) {
+float mediaAritimetica(float *numeros, int qtd_numeros) {
 
-    register int contador = 0;
+    register int contador = qtd_numeros;
     float media = 0.0;
-    while(*numeros == numeros[contador]) {
-        printf("conteude de %f \n", *numeros);
+    while(contador--) {
         media += *(numeros++);
-        contador++;
-        printf("conteude de %d \n", contador);
     }
-    return media/contador;
+    return media/qtd_numeros;
 }
 
 
@@ -55,25 +56,68 @@ float mediaAritimetica(float *numeros) {
 
   @param float *numeros endereço do vetor de números
   @param float *pesos endereço do vetor de pesos
+  @param int qtd_numeros total de números a serem calculados
   @return float média ponderada calculada
 */
-float mediaPonderada(float *numeros, int *pesos) {
+float mediaPonderada(float *numeros, int *pesos, int qtd_numeros) {
 
-    register int totalPesos = 0, contador = 0;
+    int totalPesos = 0;
     float media = 0.0;
 
-    while(*numeros) {
-        printf("tamanho do peso %d \n", sizeof(*pesos));
-        printf("teste pesos peso[%d] -> %d == %d -> %d \n", contador, *pesos, *pesos, (*pesos ? *pesos : 3));
-        totalPesos += (*pesos ? *pesos : 1);
-        media += *(numeros++) * (*pesos ? *pesos : 1);
-        pesos++;
-        contador++;
+    while(qtd_numeros--) {
+        totalPesos += (*pesos);
+        media += *(numeros++) * *(pesos++);
     }
-    printf("Soma pesos %d\n", totalPesos);
-    printf("Contador %d\n", contador);
-    printf("%f\n", media);
     return media/totalPesos;
+}
+
+
+/*
+  Calcula a média harmonica de uma lista de números dados;
+
+  @param float *numeros endereço do vetor de números
+  @param int qtd_numeros total de números a serem calculados
+  @return float média harmonica calculada
+*/
+float mediaHarmonica(float *numeros, int qtd_numeros) {
+
+    register int contador = qtd_numeros;
+    float media = 0.0;
+
+    while(contador--) {
+        media += 1 / *(numeros++);
+    }
+    return qtd_numeros/media;
+}
+
+
+/*
+  Verifica se um numero inteiro dado é primo;
+
+  @param int numero 
+  @return boolean verdadeiro caso sera primo, falso do contrário
+*/
+boolean verificaPrimo(int numero) {
+
+  register int contador, divisores;
+
+  for (contador = 1; contador <= numero; contador++)
+    if (numero % contador == 0)
+      divisores++;
+  
+  return (divisores == 2) ? TRUE : FALSE;
+}
+
+
+
+/*
+  Tira as raizes de uma equação
+
+  @param int numero 
+  @return boolean verdadeiro caso sera primo, falso do contrário
+*/
+raizes_equacao_2_grau baskara(float a, float b, float c) {
+
 }
 
 
@@ -81,10 +125,10 @@ float mediaPonderada(float *numeros, int *pesos) {
 
 int main()
 {
-    float numeros[] = {2,10};
-    int pesos[] = {1,1};
+    float numeros[] = {13,13,13};
+    int pesos[] = {1,1,1};
     printf("Média \n");
-    printf("%f\n", mediaAritimetica(numeros));
+    printf("%d\n", verificaPrimo(37));
     return 0;
 }
 
