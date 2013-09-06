@@ -13,10 +13,16 @@
 
 #define PI 3.14
 #define QTD_NOTAS 3
+#define SEGUNDOS_HORA 3600
+#define SEGUNDOS_MINUTO 60
+#define QTD_FATORES 1000000
 
 typedef enum {FALSE, TRUE} boolean;
 
-typedef struct {float raiz1, float raiz2} raizes_equacao_2_grau;
+typedef struct {double raiz1; double raiz2; char *erro;} raizes_equacao_2_grau;
+
+typedef struct {int hora; int minuto; int segundo;} tempo;
+
 
 
 /*
@@ -98,16 +104,46 @@ float mediaHarmonica(float *numeros, int qtd_numeros) {
   @return boolean verdadeiro caso sera primo, falso do contrário
 */
 boolean verificaPrimo(int numero) {
+  register int contador, divisores=0;
 
-  register int contador, divisores;
-
-  for (contador = 1; contador <= numero; contador++)
+  for (contador = 1; contador <= numero; contador++) {
     if (numero % contador == 0)
       divisores++;
-  
+  }
   return (divisores == 2) ? TRUE : FALSE;
 }
 
+
+/*
+ * Retorna o n-ésimo número primo
+ * 
+ * @param double numero
+ * @return int primo, obs: o cast é forçado;
+ */
+
+int nesimoPrimo(int numero) {
+  register int primo = 1;
+  while(numero) {
+    if(verificaPrimo(primo)) {
+      primo++;
+      numero--;
+    } else
+      primo++;
+  }
+  return primo-1;  
+}
+
+/*
+ * Cálcula o delta para uma equação do segundo grau;
+ * 
+ * @param float a coeficente
+ * @param float b coeficente
+ * @param float c coeficente
+ * @return float delta
+ */
+float calculaDelta(float a, float b, float c) {
+  return b*b-4*a*c;
+}
 
 
 /*
@@ -117,18 +153,108 @@ boolean verificaPrimo(int numero) {
   @return boolean verdadeiro caso sera primo, falso do contrário
 */
 raizes_equacao_2_grau baskara(float a, float b, float c) {
-
+  
+  raizes_equacao_2_grau raizes;
+  if(calculaDelta(a,b,c) < 0.0) {
+    raizes.erro = "Delta negativo! \nA equação não possui raízes reais.";
+  } else {
+    raizes.raiz1 = (-b + pow(calculaDelta(a,b,c),0.5))/(2*a);
+    raizes.raiz2 = (-b - pow(calculaDelta(a,b,c),0.5))/(2*a);
+    raizes.erro = "Raizes calculadas";
+  }
+  return raizes;
 }
 
 
+/*
+ * Receber um valor em segundos e retorna em horas, minuto e segundos
+ * 
+ * @param int segundos
+ * @return tempo em hora minuto e segundos
+ */
+tempo formataTempo(int segundos) {
+  tempo tempo_formatado;
+  
+  tempo_formatado.hora = segundos/SEGUNDOS_HORA;
+  segundos %= SEGUNDOS_HORA;
+  tempo_formatado.minuto = segundos/SEGUNDOS_MINUTO;
+  tempo_formatado.segundo = segundos%SEGUNDOS_MINUTO;
+  
+  return tempo_formatado;
+}
 
+
+int idadeEmDias(tempo idade) {
+}
+
+
+/*
+ * Retorna um vetor com os fatores primos de um número;
+ * 
+ * @param int numero;
+ * @return int fartores primos sem repetição;
+ */
+int* multiplosPrimos(int numero) {
+  register int contador=0, teste=0;
+  int fatores[QTD_FATORES];
+  fatores[contador] = 2;//inicio com o primeiro primo
+  while(1) {
+    if(!numero%fatores[contador]) {
+      printf("fator primo %d \n", fatores[contador]);
+      printf("resto divisão %d \n", numero%fatores[contador]);
+      if(numero%fatores[contador])
+      numero = numero/fatores[contador];
+      printf("numero %d \n", numero);
+      //break;
+      //if(numero == 1)
+        //break;
+      //print("numero %d \n", numero);
+      //break;
+      //numero == 1 ? break : continue;
+    }
+    else
+      fatores[++contador] = nesimoPrimo(contador+1);
+    
+    if(numero == 1)
+      break;
+  }
+  fatores[contador+1] = '\0';
+  printf("contador %d \n", contador);
+  /*while(fatores[teste]) {
+     printf("fator primo %d \n", fatores[teste]);
+     teste++;
+  }*/  
+   
+  return fatores;
+}  
+
+
+/*
+ * Verifica se o número é perfeito;
+ * 
+ * @param int numero
+ * @return boolean TRUE para é perfeito ou FALSE caso contrário
+ */
+boolean numeroPerfeito(int numero) {
+  register int contador;
+  int soma = 0;
+  
+  for(contador = 1; contador < numero; contador++) {
+    if(!numero%contador)
+      soma += contador;
+  }
+  printf("soma é %d\n", soma);
+  return (soma == numero) ? TRUE : FALSE; 
+}
 
 int main()
 {
     float numeros[] = {13,13,13};
     int pesos[] = {1,1,1};
-    printf("Média \n");
-    printf("%d\n", verificaPrimo(37));
+    int numero = 6;
+    //raizes_equacao_2_grau raizes = baskara(1,-2,7);
+    //tempo tempo_formatado = formataTempo(3670);
+    printf("numero %d é %d\n", numero,numeroPerfeito(numero));
     return 0;
 }
 
