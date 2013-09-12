@@ -36,6 +36,7 @@ void somaDigito(algarismo parcela1, algarismo parcela2, algarismo *soma) {
     
 }
 
+/*TODO: entrar com um carry nulo e a cada interação somar com o carry resultante da soma*/
 big_num soma(big_num parcela1, big_num parcela2, big_num resultado) {
   
 }
